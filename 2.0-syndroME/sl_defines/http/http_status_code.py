@@ -1,0 +1,22 @@
+status_code = {
+    200:"200 OK",
+    303:"303 See Other",
+    304:"304 Not Modified",
+    400:"400 Bad Request",
+    401:"401 Unauthorized",
+    403:"403 Forbidden",
+    404:"404 Not Found",
+    408:"408 Request Timeout",
+    411:"411 Length Required",
+    413:"413 Payload Too Large",
+    414:"414 URI Too Long",
+    415:"415 Unsupported Media Type",
+    418:"418 I'm a teapot",
+    421:"421 Misdirected Request",
+    426:"426 Upgrade Required",
+    451:"451 Unavailable For Legal Reasons",
+    500:"500 Internal Server Error",
+    501:"501 Not Implemented",
+    502:"502 Bad Gateway",
+    505:"505 HTTP Version Not Supported"
+    }
