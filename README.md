@@ -10,5 +10,5 @@ Blocking HTTPS.
 動作は安定しています。ロギングとメンテナンスモードを実装しています。
 
 ## 2.0-syndroME
-Non-Blocking mode HTTP2, Non-Blocking HTTP(S), Blocking HTTP(S).  
+Non-Blocking mode HTTP/2, Non-Blocking HTTP(S), Blocking HTTP(S).  
 大きな設計変更の予定はなく、開発を継続していく予定。
