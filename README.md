@@ -1,6 +1,7 @@
 # Lilith
 本格的なサービスの提供ではなく、デモの作成やペネトレーションテストなどを想定して作成されています。  
 全てのバージョンのHTTPサーバーでCGIに似た機能をサポートしています。
+※2.0-syndroMEからPythonのバージョンを27から3に変更しています。
     
 ___ I don't eat cookies because it's high calorie.
 
