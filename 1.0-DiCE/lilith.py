@@ -15,7 +15,6 @@ sys.setdefaultencoding("utf-8")
 print("[*]bindIP: %s  bindPORT: %d\n" % (lilith_defines.bind_ip, lilith_defines.bind_port_ssl))
 config.fileConfig(fname=lilith_defines.log_file, disable_existing_loggers=False)
 
-#must be module
 def make_http_header(status="200 OK", server="Server", Accept_Ranges="bytes", Content_Length="0", Keep_Alive="timeout=15, max=100", Content_Type="media/binary"):
     return("HTTP/1.1 " + status + \
            "\r\nServer: " + server + \
@@ -25,7 +24,6 @@ def make_http_header(status="200 OK", server="Server", Accept_Ranges="bytes", Co
            "\r\nContent-Type: " + Content_Type + \
            "\r\n\r\n")
 
-#must be module
 def handler(socket):
     socket.settimeout(30.0)
     while(True):

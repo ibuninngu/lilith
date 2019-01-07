@@ -84,7 +84,7 @@ def client_handler(fileno):
                     data, m_type, status = gept.gept(pfg[0], pfg[1])
                     data = data.encode("utf-8")
                 else:
-                    data, m_type, status = get.get(params[":path"], direc=root_directory, message_dir=message_directory)
+                    data, m_type, status = get.get(params[":path"], root_dir=root_directory, message_dir=message_directory)
                 print("GET--->:", params[":path"])
             elif(params[":method"] == "POST"):
                 post_data = []
@@ -106,7 +106,7 @@ def client_handler(fileno):
                 data, m_type, status = post.post(params[":path"], (post_data[-1][0]).decode("utf-8"))
                 data = data.encode("utf-8")
             else:
-                data, m_type, status = get.get("/400.html", direc="./sl_contents/example.com/http/messages")
+                data, m_type, status = get.get("/400.html", root_dir="./sl_contents/example.com/http/messages")
                 status = 400
             rh = [(":status",str(status)),
                   ("server",http2_defines.server_name),

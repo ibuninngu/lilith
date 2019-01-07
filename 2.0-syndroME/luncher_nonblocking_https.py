@@ -1,11 +1,10 @@
-import sl_sockets.non_blocking_ssl as non_blocking
+import pl_sockets.non_blocking_ssl as SOCKET
+import pl_server.http.lilith_http as HANDLER
 import socket
 import ssl
-import sl_server.http.lilith_http as HANDLER
 
 listen = 128
-#bind_ip = socket.gethostbyname(socket.gethostname())
-bind_ip = "127.0.0.1"
+bind_ip = "localhost"
 bind_port=80
 bind_port_ssl = 443
 timeout = 60
@@ -22,6 +21,8 @@ server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
 server_sock.bind((bind_ip, bind_port_ssl))
 server_sock.listen(listen)
 
-non_blocking.SERVER = HANDLER
-non_blocking.SSL_CONTEXT = context
-non_blocking.main(server_sock, timeout)
+HANDLER.root_dir = "./sl_contents/example.com/http/www"
+HANDLER.message_dir = "./sl_contents/example.com/http/messages"
+SOCKET.SERVER = HANDLER
+SOCKET.SSL_CONTEXT = context
+SOCKET.main(server_sock, timeout)

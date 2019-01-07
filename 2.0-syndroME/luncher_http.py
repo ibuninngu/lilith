@@ -1,11 +1,10 @@
-import sl_sockets.blocking as blocking
+import sl_server.http.http as HANDLER
+import sl_sockets.blocking as SOCKET
 import socket
-
-import sl_server.http.lilith_http as HANDLER
 
 thread_range = 40
 listen = 128
-bind_ip = "127.0.0.1"
+bind_ip = "localhost"
 bind_port=80
 
 print("[*]bindIP: %s  bindPORT: %d\n[?]Socket:BLOCKING MODE" % (bind_ip, bind_port))    
@@ -14,5 +13,7 @@ server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_sock.bind((bind_ip, bind_port))
 server_sock.listen(listen)
 
-blocking.SERVER = HANDLER
-blocking.main(server_sock, thread_range)
+HANDLER.root_dir = "./sl_contents/example.com/http/www"
+HANDLER.message_dir = "./sl_contents/example.com/http/messages"
+SOCKET.SERVER = HANDLER
+SOCKET.main(server_sock, thread_range)

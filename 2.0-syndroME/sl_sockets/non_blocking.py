@@ -15,7 +15,6 @@ def accept_handler(serversocket):
     read_waiters[clientsocket.fileno()] = (recv_handler, (clientsocket.fileno(), ))
     read_waiters[serversocket.fileno()] = (accept_handler, (serversocket, ))
 
-
 def recv_handler(fileno):
     def terminate():
         del connections[clientsocket.fileno()]
@@ -28,7 +27,6 @@ def recv_handler(fileno):
         terminate()
         return    
     write_waiters[fileno] = (send_handler, (fileno, message))
-
 
 def send_handler(fileno, message):
     clientsocket, client_address, client_port = connections[fileno]
