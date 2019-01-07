@@ -27,7 +27,7 @@ def make_http_header(status="200 OK", server="Server", Accept_Ranges="bytes", Co
 def handler(socket):
     socket.settimeout(30.0)
     while(True):
-        message = "<<< FUCK OFF >>>"
+        message = ""
         try:
             request = str(socket.recv(lilith_defines.recv_val))
         except:
