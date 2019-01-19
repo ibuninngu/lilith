@@ -19,12 +19,12 @@ def GET(header_params):
     if(header_params["path"].find("?") != -1):
         pfg = header_params["path"].split("?")
         content, content_type, p_status = post.post(pfg[0], pfg[1], message_dir + "/412.html")
-        return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
+	return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
     content, content_type, g_status = get.get(req=header_params["path"],root_dir=root_dir, message_dir=message_dir)
     return make_http_header.make_http_header(status=g_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
 def POST(header_params, body):
-	# body is always Binary
+    # body is always Binary
     content, content_type, p_status = post.post(header_params["path"], body, message_dir + "/404.html")
     return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
@@ -57,7 +57,7 @@ def main(socket):
         # recv while Content_Length
         body_len_int = -(-(content_length) // recv_val)+1
         for _ in range(body_len_int):
-			# don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
+	    # don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
             tmp_buf = socket.recv(recv_val)
             body += tmp_buf
         h, post_buf = POST(header_params, body)
