@@ -16,48 +16,52 @@ message_dir = "./sl_contents/example.com/http/messages"
 SOCKET = None
 
 def GET(header_params):
-    if(header_params["path"].find("?") != -1):
-        pfg = header_params["path"].split("?")
-        content, content_type, p_status = post.post(pfg[0], pfg[1], message_dir + "/412.html")
-	return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
-    content, content_type, g_status = get.get(req=header_params["path"],root_dir=root_dir, message_dir=message_dir)
+    print("GET...>>> ", header_params[b"path"])
+    if(header_params[b"path"].find(b"?") != -1):
+        pfg = header_params[b"path"].split(b"?")
+        content, content_type, p_status = post.post(pfg[0].decode("utf-8"), pfg[1], message_dir + "/412.html")
+        return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
+    content, content_type, g_status = get.get(req=header_params[b"path"].decode("utf-8"),root_dir=root_dir, message_dir=message_dir)
     return make_http_header.make_http_header(status=g_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
 def POST(header_params, body):
+    print("POST...>>> ", header_params[b"path"], ":::::", body[:5])
     # body is always Binary
-    content, content_type, p_status = post.post(header_params["path"], body, message_dir + "/404.html")
+    content, content_type, p_status = post.post(header_params[b"path"].decode("utf-8"), body, message_dir + "/404.html")
     return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
 def main(socket):
     header_params = {}
     body = b""
     buf = socket.recv(recv_val)
-    header = buf.decode("utf-8").split("\r\n")
+    packet = buf.split(b"\r\n\r\n")
+    header = packet[0].split(b"\r\n")
+    for b in packet[1:]:
+        body += b"\r\n\r\n" + b
+    body=body[4:]
     #http headers to hash-map
-    first_line = header[0].split(" ")
-    header_params.update({"method":first_line[0]})
-    header_params.update({"path":first_line[1]})
+    first_line = header[0].split(b" ")
+    header_params.update({b"method":first_line[0]})
+    header_params.update({b"path":first_line[1]})
     #header_params.update({"version":first_line[2]})
-    for param in header[1:-2]:
-        p = param.split(": ")
+    for param in header[1:]:
+        p = param.split(b": ")
         header_params.update({p[0]:p[1]})
-        print(p)
-    if(header_params["method"] == "GET"):
+    if(header_params[b"method"] == b"GET"):
         h, get_buf = GET(header_params)
         message = h + get_buf
         return message
-    elif(header_params["method"] == "POST"):
-        # recv message body
-        content_length = int(header_params["Content-Length"])
+    elif(header_params[b"method"] == b"POST"):
+        content_length = int(header_params[b"Content-Length"].decode("utf-8"))
         # first, check Content_Length from header
         if(buf_limit < content_length):
             content, content_type, g_status = get.get("/413.html", direc=message_dir)
             message = make_http_header.make_http_header(status=413, Content_Length=str(len(content)), Content_Type=content_type)
             return message + content
         # recv while Content_Length
-        body_len_int = -(-(content_length) // recv_val)+1
+        body_len_int = -(-(content_length - len(buf)) // recv_val)
         for _ in range(body_len_int):
-	    # don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
+            # don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
             tmp_buf = socket.recv(recv_val)
             body += tmp_buf
         h, post_buf = POST(header_params, body)
