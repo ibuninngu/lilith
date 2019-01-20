@@ -1,5 +1,5 @@
-import pl_sockets.non_blocking_ssl as SOCKET
-import pl_server.http.lilith_http as HANDLER
+import sl_sockets.non_blocking_ssl as SOCKET
+import sl_server.http.http as HANDLER
 import socket
 import ssl
 

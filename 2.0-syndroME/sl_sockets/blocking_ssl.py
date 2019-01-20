@@ -12,11 +12,10 @@ def accept_thread(server_sock):
         new_sock, addr = server_sock.accept()
         connstream = SSL_CONTEXT.wrap_socket(new_sock, server_side=True)
         LOCK.release()
-        new_sock.settimeout(timeout)
-        SERVER.SOCKET = connstream
-        message = SERVER.main(new_sock)
-        SERVER.SOCKET.send(message)
-        new_sock.close()
+        connstream.settimeout(timeout)
+        message = SERVER.main(connstream)
+        connstream.send(message)
+        connstream.close()
 
 def main(listening_socket, thread_range):
     thread_list = []

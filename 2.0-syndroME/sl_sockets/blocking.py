@@ -11,9 +11,8 @@ def accept_thread(server_sock):
         new_sock, addr = server_sock.accept()
         LOCK.release()
         new_sock.settimeout(timeout)
-        SERVER.SOCKET = new_sock
         message = SERVER.main(new_sock)
-        SERVER.SOCKET.send(message)
+        new_sock.send(message)
         new_sock.close()
 
 def main(listening_socket, thread_range):

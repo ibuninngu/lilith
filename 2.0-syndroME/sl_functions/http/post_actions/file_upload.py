@@ -5,6 +5,8 @@ def file_upload(params):
     p=params.split(boundary)
     #print(p)
     content_type = p[1][p[1].find(b"Content-Type")+14:p[1].find(b"\r\n\r\n")].decode('utf-8')
-    print(content_type)
+    #print(content_type)
+    #print(params[:200])
+    #print(params[-50:])
     buf = p[1][p[1].find(b"\r\n\r\n")+4:-2]
     return(buf, content_type, 200)

@@ -7,13 +7,10 @@ import sl_functions.http.make_http_header as make_http_header
 # ========== DEFINES ========== #
 recv_val = 4096
 #1024...1kb **2...1Mb
-buf_limit = 1024 ** 4
+buf_limit = 1024 ** 3
 buf_limit_int = int(buf_limit / recv_val)
 root_dir = "./sl_contents/example.com/http/www"
 message_dir = "./sl_contents/example.com/http/messages"
-
-# socket
-SOCKET = None
 
 def GET(header_params):
     print("GET...>>> ", header_params[b"path"])
@@ -55,11 +52,11 @@ def main(socket):
         content_length = int(header_params[b"Content-Length"].decode("utf-8"))
         # first, check Content_Length from header
         if(buf_limit < content_length):
-            content, content_type, g_status = get.get("/413.html", direc=message_dir)
+            content, content_type, g_status = get.get("/413.html", root_dir=message_dir)
             message = make_http_header.make_http_header(status=413, Content_Length=str(len(content)), Content_Type=content_type)
             return message + content
         # recv while Content_Length
-        body_len_int = -(-(content_length - len(buf)) // recv_val)
+        body_len_int = -(-(content_length - len(body)) // recv_val)
         for _ in range(body_len_int):
             # don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
             tmp_buf = socket.recv(recv_val)
@@ -68,6 +65,6 @@ def main(socket):
         message = h + post_buf
         return message
     else:
-        get_buf, content_type, g_status = get.get("/501.html", direc=messages_dir)
+        get_buf, content_type, g_status = get.get("/501.html", root_dir=message_dir)
         message = make_http_header.make_http_header(status=501, Content_Length=str(len(get_buf)), Content_Type=content_type)
-        return message + content
+        return message + get_buf

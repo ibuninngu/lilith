@@ -6,16 +6,16 @@ import ssl
 thread_range = 40
 listen = 128
 bind_ip = "localhost"
-bind_port=80
+bind_port_ssl = 443
 certfile="./sl_contents/Encript/example.com/cert.pem"
 keyfile="./sl_contents/Encript/example.com/privkey.pem"
 
-print("[*]bindIP: %s  bindPORT: %d\n[?]Socket:BLOCKING MODE" % (bind_ip, bind_port))    
+print("[*]bindIP: %s  bindPORT: %d\n[?]Socket:BLOCKING MODE" % (bind_ip, bind_port_ssl))    
 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 context.load_cert_chain(certfile=certfile, keyfile=keyfile)
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((bind_ip, bind_port_ssl))
-server.listen(listen)
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_sock.bind((bind_ip, bind_port_ssl))
+server_sock.listen(listen)
 
 HANDLER.root_dir = "./sl_contents/example.com/http/www"
 HANDLER.message_dir = "./sl_contents/example.com/http/messages"
