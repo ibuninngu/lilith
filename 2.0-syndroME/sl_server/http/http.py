@@ -38,11 +38,12 @@ def main(socket):
     body=body[4:]
     #http headers to hash-map
     first_line = header[0].split(b" ")
-    if(len(first_line)<1):
-        return b"<>"
-    header_params.update({b"method":first_line[0]})
-    header_params.update({b"path":first_line[1]})
-    #header_params.update({"version":first_line[2]})
+    try:
+        header_params.update({b"method":first_line[0]})
+        header_params.update({b"path":first_line[1]})
+        header_params.update({"version":first_line[2]})
+    except:
+        return b"<<>>"
     for param in header[1:]:
         p = param.split(b": ")
         header_params.update({p[0]:p[1]})
