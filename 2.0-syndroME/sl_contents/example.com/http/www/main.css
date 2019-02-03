@@ -1,0 +1,48 @@
+@font-face {
+    font-family: "share";
+    src: url("./ShareTechMono-Regular.ttf") format("truetype");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+img{
+    width:100%;
+}
+a {
+    text-decoration: none;
+    color: rgb(54, 87, 197);
+    cursor: pointer;
+}
+
+body{
+    color: white;
+    background-color: rgb(136, 199, 255);
+    font-family: "share";
+}
+
+.tc{
+    text-align: center;
+}
+
+.s10{
+    font-size: 10vw;
+}
+
+.s5{
+    font-size: 5vw;
+}
+
+.s4{
+    font-size: 4vw;
+}
+
+.t_box{
+    font-size: 20px;
+    padding-top:1em;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom:1.5em;
+}

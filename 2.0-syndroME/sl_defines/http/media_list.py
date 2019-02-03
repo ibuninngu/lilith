@@ -1,11 +1,19 @@
 media_list = {
+    "txt":"text",
     "html":"text",
     "css":"text",
     "js":"text",
-    "txt":"text",
     "jpg":"image",
+    "JPG":"image",    
+    "jpeg":"image",
+    "JPEG":"image",
     "png":"image",
+    "PNG":"image",
     "gif":"image",
-    "svg+xml":"image",
-    "ico":"image"
+    "ico":"image",
+    "mp4":"video",
+    "mp3":"audio",
+    "otf":"application/x-font-otf",
+    "woff":"application/x-font-woff",
+    "ttf":"application/x-font-ttf"
     }
