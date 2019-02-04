@@ -23,22 +23,30 @@ def recv_handler(fileno):
         del connections[clientsocket.fileno()]
         clientsocket.close()
         print("SOCKET CLOSED")
-    clientsocket, client_address, client_port = connections[fileno]
     try:
+        clientsocket, client_address, client_port = connections[fileno]
         message = SERVER.main(clientsocket)
+        write_waiters[fileno] = (send_handler, (fileno, message))
     except OSError:
         terminate()
-        return    
-    write_waiters[fileno] = (send_handler, (fileno, message))
+        return
 
 def send_handler(fileno, message):
-    clientsocket, client_address, client_port = connections[fileno]
-    sent_len = clientsocket.send(message)
-    if sent_len == len(message):
-        read_waiters[clientsocket.fileno()] = (recv_handler,(clientsocket.fileno(), ))
-    else:
-        write_waiters[fileno] = (send_handler,(fileno, message[sent_len:]))
-        
+    def terminate():
+        del connections[clientsocket.fileno()]
+        clientsocket.close()
+        print("SOCKET CLOSED")
+    try:
+        clientsocket, client_address, client_port = connections[fileno]
+        sent_len = clientsocket.send(message)
+        if sent_len == len(message):
+            read_waiters[clientsocket.fileno()] = (recv_handler,(clientsocket.fileno(), ))
+        else:
+            write_waiters[fileno] = (send_handler,(fileno, message[sent_len:]))
+    except OSError:
+        terminate()
+        return
+
 def main(listening_socket, timeout):
     read_waiters[listening_socket.fileno()] = (accept_handler, (listening_socket,))
     while True:
