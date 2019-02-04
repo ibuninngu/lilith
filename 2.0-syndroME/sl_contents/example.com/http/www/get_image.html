@@ -1,0 +1,21 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Lilith|get uploaded images</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body>
+    <div id="w" class="window">
+    </div>
+</body>
+
+</html>
+<script src="./post.js"></script>
+<script>
+    var w = document.getElementById("w");
+    post("", { "Lilith": "get_all_images" }, "/get_all_images.post", "POST").then(text => {
+        w.innerHTML = text;
+    });
+</script>

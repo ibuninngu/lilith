@@ -2,14 +2,19 @@
 
 <head>
     <meta charset="utf-8" />
+    <title>Lilith|image upload test</title>
+    <link rel="stylesheet" href="./main.css">
 </head>
 
 <body>
-    <h1>file_upload tset</h1>
-    <form action="/file_upload.post" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" />
-        <input type="submit" name="submit" value="submit" />
-    </form>
+    <div class="window tc">
+        <h1>image upload test</h1>
+        <p>./sl_contents/example.com/http/www/upload/...</p>
+        <form class="tc" action="/file_upload.post" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" />
+            <input type="submit" name="submit" value="submit" />
+        </form>
+    </div>
 </body>
 
 </html>

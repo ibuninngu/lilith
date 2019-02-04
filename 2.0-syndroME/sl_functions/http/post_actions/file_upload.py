@@ -15,5 +15,5 @@ def file_upload(params):
     file_name = p[1][tmp+10:p[1][tmp:].find(b"\r\n")+tmp-1].decode('utf-8')
     buf = p[1][p[1].find(b"\r\n\r\n")+4:-2]
     thread = threading.Thread(target=save, args=(file_name,buf))
-    thread.start()    
+    thread.start()
     return(buf, content_type, 200)
