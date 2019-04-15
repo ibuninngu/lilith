@@ -8,7 +8,6 @@ import sl_functions.http.make_http_header as make_http_header
 recv_val = 4096
 #1024...1kb **2...1Mb
 buf_limit = 1024 ** 3
-buf_limit_int = int(buf_limit / recv_val)
 root_dir = "./sl_contents/example.com/http/www"
 message_dir = "./sl_contents/example.com/http/messages"
 
@@ -62,8 +61,7 @@ def main(socket):
             message = make_http_header.make_http_header(status=413, Content_Length=str(len(content)), Content_Type=content_type)
             return message + content
         # recv while Content_Length
-        body_len_int = -(-(content_length - len(body)) // recv_val)
-        for _ in range(body_len_int):
+        while(len(body)<content_length):
             # don't tmp_buf.decode('utf-8'), "multipart/form-data" is binary
             tmp_buf = socket.recv(recv_val)
             body += tmp_buf
