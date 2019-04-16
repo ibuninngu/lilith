@@ -7,6 +7,3 @@ post_list = {
     "/file_upload.post":file_upload.file_upload,
     "/get_all_images.post":get_all_images.get_all_images
     }
-gept_list = {
-    "/post_test.post":post_test.post_test
-    }
