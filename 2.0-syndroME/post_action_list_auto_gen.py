@@ -9,7 +9,7 @@ def auto_gen():
     for a in glob.glob(functions_directory+"/*.py"):
         mod_name = a[a.find("\\")+1:-3]
         imports += path + "." + mod_name + " as " + mod_name + "\n"
-        hashmaps += "\"/" + mod_name + ".post\":" + mod_name + "." + mod_name + ","
+        hashmaps += "\"/" + mod_name + ".post\":(" + mod_name + "." + mod_name + ",True),"
         print(">>>",mod_name)
     hashmaps = hashmaps[:-1] + "}"
     f = open(action_list_directory+"/post_action_list.py","w")

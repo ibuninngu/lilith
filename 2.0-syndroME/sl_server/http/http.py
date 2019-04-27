@@ -23,7 +23,7 @@ def GET(header_params):
 def POST(header_params, body):
     print("POST...>>> ", header_params[b"path"], ":::::", body[:10], body[-20:])
     # body is always Binary
-    content, content_type, p_status = post.post(header_params[b"path"].decode("utf-8"), body, message_dir + "/404.html")
+    content, content_type, p_status = post.post(header_params[b"path"].decode("utf-8"), body, message_dir)
     return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
 def main(socket):

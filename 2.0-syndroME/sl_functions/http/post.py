@@ -1,11 +1,17 @@
 import sl_functions.http.post_action_list as post_action_list
 
-def post(req, arg, error_message):
+def post(req, arg, message_dir):
     try:
-        content, content_type, p_status = post_action_list.post_list[req](arg)
-        return(content, content_type, p_status)
+        if(post_action_list.post_list[req][1]):
+            content, content_type, p_status = post_action_list.post_list[req][0](arg)
+            return(content, content_type, p_status)
+        else:
+            f = open(message_dir + "/405.html", "rb")
+            buf = f.read()
+            f.close()
+            return(buf, "text/html", 405)            
     except KeyError as error:
-        f = open(error_message, "rb")
+        f = open(message_dir + "/404.html", "rb")
         buf = f.read()
         f.close()
         return(buf, "text/html", 404)
