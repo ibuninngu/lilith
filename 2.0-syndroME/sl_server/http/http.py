@@ -13,11 +13,12 @@ root_dir = "./sl_contents/example.com/http/www"
 message_dir = "./sl_contents/example.com/http/messages"
 
 def GET(header_params):
-    print("GET...>>> ", header_params[b"path"])
     if(header_params[b"path"].find(b"?") != -1):
+        print("GEPT...>>> ", header_params[b"path"])
         pfg = header_params[b"path"].split(b"?")
         content, content_type, p_status = gept.gept(pfg[0].decode("utf-8"), pfg[1], message_dir + "/412.html")
         return make_http_header.make_http_header(status=p_status, Content_Length=str(len(content)), Content_Type=content_type), content
+    print("GET...>>> ", header_params[b"path"])
     content, content_type, g_status = get.get(req=header_params[b"path"].decode("utf-8"),root_dir=root_dir, message_dir=message_dir)
     return make_http_header.make_http_header(status=g_status, Content_Length=str(len(content)), Content_Type=content_type), content
 
