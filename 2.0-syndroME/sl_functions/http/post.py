@@ -2,7 +2,7 @@ import sl_functions.http.post_action_list as post_action_list
 
 def post(req, arg, message_dir):
     try:
-        if(post_action_list.post_list[req][1]):
+        if(not post_action_list.post_list[req][1]):
             content, content_type, p_status = post_action_list.post_list[req][0](arg)
             return(content, content_type, p_status)
         else:
