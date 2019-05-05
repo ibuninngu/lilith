@@ -16,3 +16,8 @@ Blocking HTTPS.
 ## 2.0-syndroME
 ・Python3  
 Non-Blocking mode HTTP/2, Non-Blocking HTTP(S), Blocking HTTP(S).
+
+## 3.0-STiCK
+・Julia-1.1  
+Juliaへの移行を検討するため、ひとまずPythonで使っている方法と同じように実装してみます。  
+Windows:Chromeでのページの読み込み速度は6倍(100ms vs 600ms)ほど遅いという結果になりました・・・書き方が悪いだけの可能性が高いです。
