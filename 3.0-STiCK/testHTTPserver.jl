@@ -13,18 +13,17 @@ module DEF
                     "mp3" => "audio",
                     "ico" => "image")
 
-    function PostTest(params)
-    params = join(map(x->Char(x), params), "")
-    println(params)
-    params = split(params, "&")
+function PostTest(params)
+    params = split(string(params), "&")
     buf = ""
     for line in params
-        buf = string(buf, "<p>$line</p>")
+        buf = string(buf, "<p>", line, "</p>")
     end
     return(buf, "text/html", "200")
 end
 
     PostList = Dict("/PostTest.post" => PostTest)
+
 end
 
 function MakeHttpHeader(Status = "200", ContentType = "media/binary",  ContentLength = "0", KeepAlive = "timeout=15, max=100", Server = DEF.ServerName, AcceptRanges = "bytes")
@@ -48,8 +47,8 @@ function GET(request)
     try
         s = request[findfirst(isequal('.'), request) + 1:end]
         n = DEF.MediaList[s]
-        open("$(DEF.RootDirectory)$request") do f
-            return(read(f, String), "$n/$s", "200")
+        open("$(DEF.RootDirectory)$request", "r") do f
+            return(read(f), "$n/$s", "200")
         end
     catch
         return("404", "text/html", "404")
@@ -66,21 +65,23 @@ function POST(target, request)
 end
 
 function ClientHandler(socket)
-    buffer = readuntil(socket, "\r\n\r\n")
+    buffer = String(readavailable(socket))
     hashes = Dict("" => "")
     splited = split(buffer, "\r\n")
-    for line in splited[2:end]
+    for line in splited[2:end - 2]
         tmp = split(line, ":")
         merge!(hashes, Dict(tmp[1] => tmp[2]))
     end
-    if occursin(r"GET", buffer)
+    if "GET" == splited[1][1:3]
         r, m, s = GET(split(splited[1], " ")[2])
-        buf = MakeHttpHeader(s, m, length(r))
-        write(socket, "$buf$r")
-    elseif occursin(r"POST", buffer)
-        r, m, s = POST(split(splited[1], " ")[2], read(socket, parse(Int64, hashes["Content-Length"])))
-        buf = MakeHttpHeader(s, m, length(r))
-        write(socket, "$buf$r")
+        buf = Vector{UInt8}(MakeHttpHeader(s, m, length(r)))
+        append!(buf, r)
+        write(socket, buf)
+    elseif "POST" == splited[1][1:4]
+        r, m, s = POST(split(splited[1], " ")[2], splited[end])
+        buf = Vector{UInt8}(MakeHttpHeader(s, m, length(r)))
+        append!(buf, r)
+        write(socket, buf)
     else
         close(socket)
     end
