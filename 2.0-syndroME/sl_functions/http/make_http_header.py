@@ -8,7 +8,7 @@ def make_http_header(status=200, server=lilith_defines.server_name, Accept_Range
            "\r\nContent-Length: " + Content_Length + \
            "\r\nKeep-Alive: " + Keep_Alive + \
            "\r\nContent-Type: " + Content_Type + \
-           "\r\nContent-Security-Policy: default-src 'self'" + \
+           #"\r\nContent-Security-Policy: default-src 'self'" + \
            "\r\nX-Frame-Options: SAMEORIGIN" + \
            "\r\nX-XSS-Protection: 1; mode=block" + \
            "\r\n\r\n").encode("utf-8")

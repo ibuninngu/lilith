@@ -21,7 +21,7 @@ def frame_parser(data):
         data = payload_and_data[1]
     return R
 
-# Type = 0
+# Type 0
 # PadLength?(8) Data(*) Padding?(PadLength)
 def data_frame_parser(data, flags):
     R = []
@@ -34,7 +34,7 @@ def data_frame_parser(data, flags):
         R.append(data)
     return R
 
-# Type = 1
+# Type 1
 # PadLength?(8) [E(1) StreamDependency?(31)] Weight?(8) HeaderBlockFragment(*) Padding?(PadLength)
 def headers_frame_parser(data, flags):
     #print(data.hex())
@@ -53,7 +53,7 @@ def headers_frame_parser(data, flags):
         R = parser.bytes_parse(tmp_data, [4, 1])
     return R
 
-# Type = 2
+# Type 2
 def priority_frame_parser(data, flags):
     R = []
     R = parser.bytes_parse(data, [4, 1])
