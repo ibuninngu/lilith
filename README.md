@@ -21,5 +21,5 @@ Non-Blocking mode HTTP/2, Non-Blocking HTTP(S), Blocking HTTP(S).
 ・Julia-1.1  
 Juliaへの移行を検討するため、ひとまずPythonで使っている方法と同じように実装してみます。  
 Windows:Chromeでのページの読み込み速度は6倍(100ms vs 600ms)ほど遅いという結果になりました・・・書き方が悪いだけの可能性が高いです。  
-※その後調整を行い、HTTPの比較では同じ速度となりました。  
-現在JuliaはPythonのように"デフォルト"でsslをサポートしていないため、開発は保留とします。
+※その後調整を行い、HTTPの比較では同じ速度となりました。    
+現在はPython37のasyncioを利用して作成。
