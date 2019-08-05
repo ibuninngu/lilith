@@ -18,5 +18,6 @@ Blocking HTTPS.
 Non-Blocking mode HTTP/2, Non-Blocking HTTP(S), Blocking HTTP(S).
 
 ## 3.0-STiCK
-・Python3  
-HTTP2をまともに動くよう改修しました。SMTP(AUTH), POP3を追加。ソースコード、SSL証明書やコンテンツなどの管理が大変になってきたので、公開はしばらく控えます。
+・Python37  
+asyncioに切り替えました。  
+HTTP(S), HTTP/2, POP3, SMTP(PLAIN-AUTH)
