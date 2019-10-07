@@ -25,7 +25,7 @@ def GET(header):
     print("GET...>>> ", header[b"path"])
     if(header[b"path"].find(b"?") != -1):
         pfg = header[b"path"].split(b"?")
-        content, content_type, p_status = post.post(pfg[0].decode("utf-8"), pfg[1], message_dir + "/412.html")
+        content, content_type, p_status = gept.gept(pfg[0].decode("utf-8"), pfg[1], message_dir + "/412.html")
         return make_http_header.make_http_header(status=p_status, Content_Length=len(content), Content_Type=content_type.encode("utf-8")) + content
     content, content_type, g_status = get.get(req=header[b"path"].decode("utf-8"),root_dir=root_dir, message_dir=message_dir)
     return make_http_header.make_http_header(status=g_status, Content_Length=len(content), Content_Type=content_type.encode("utf-8")) + content
