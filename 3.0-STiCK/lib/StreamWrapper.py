@@ -57,17 +57,21 @@ class StreamWrapper():
         pass
     async def __normal_recv():
         pass    
-    async def __debug_recv(self, i=self.__Recvsize):
-        R = b""
+    async def __debug_recv(self, i=0):
+        R = b""     
         R = await self.__normal_recv(i)
         print("<<<...RECV", self.__PeerInfo[0], R)
         return(R)
-    async def __non_ssl_recv(self, i=self.__Recvsize):
+    async def __non_ssl_recv(self, i=0):
         R = b""
+        if(i == 0):
+            i = self.__Recvsize        
         R = await asyncio.wait_for(self.__Reader.read(i), timeout=self.__Timeout)
         return(R)
-    async def __ssl_recv(self, i=self.__Recvsize):
+    async def __ssl_recv(self, i=0):
         R = b""
+        if(i == 0):
+            i = self.__Recvsize
         self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(i), timeout=self.__Timeout))
         while(True):
             try:
