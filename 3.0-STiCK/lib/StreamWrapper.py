@@ -4,7 +4,7 @@ import ssl
 ########## DEFAULT DEFINES ##########
 DEFAULT_TIMEOUT = 30.0
 RECV_SIZE = 1024 * 4
-TLS_READ_SIZE = 8
+TLS_READ_SIZE = -1
 #####################################
 
 # Stream wrapper for asyncio.start_server, serve_forever
@@ -57,16 +57,16 @@ class StreamWrapper():
         pass
     async def __normal_recv():
         pass    
-    async def __debug_recv(self, i=RECV_SIZE):
+    async def __debug_recv(self, i=self.__Recvsize):
         R = b""
         R = await self.__normal_recv(i)
         print("<<<...RECV", self.__PeerInfo[0], R)
         return(R)
-    async def __non_ssl_recv(self, i=RECV_SIZE):
+    async def __non_ssl_recv(self, i=self.__Recvsize):
         R = b""
         R = await asyncio.wait_for(self.__Reader.read(i), timeout=self.__Timeout)
         return(R)
-    async def __ssl_recv(self, i=RECV_SIZE):
+    async def __ssl_recv(self, i=self.__Recvsize):
         R = b""
         self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(i), timeout=self.__Timeout))
         while(True):
