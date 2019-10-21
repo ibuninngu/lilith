@@ -1,7 +1,8 @@
 # Lilith
 本格的なサービスの提供ではなく、とりあえず動くゴミを手っ取り早くでっち上げるために開発されています。
 全てのバージョンのHTTPサーバーでCGIに似た機能をサポートしています。  
-※2.0-syndroMEからPythonのバージョンを27から3に変更しています。
+※2.0-syndroMEからPythonのバージョンを27から3に変更しています。  
+ドキュメントは・・・ない。  
     
 ___ I don't eat cookies because it's high calorie.
 
@@ -21,3 +22,5 @@ Non-Blocking mode HTTP/2, Non-Blocking HTTP(S), Blocking HTTP(S).
 ・Python37  
 asyncioに切り替えました。  
 HTTP(S), HTTP/2, POP3, SMTP(PLAIN-AUTH)
+### 3.1-STiCK-CookieMoguMogu
+Cookieを食べてみたバージョン。次に引き継ぐかは未定。
