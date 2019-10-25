@@ -13,7 +13,7 @@ class StreamWrapper():
         instance = super().__new__(cls)
         await instance.__init__(*a, **kw)
         return instance
-    async def __init__(self, reader, writer, recvsize=RECV_SIZE, timeout=DEFAULT_TIMEOUT, ssl_context=None, tls_read_size=TLS_READ_SIZE, debug=False):
+    async def __init__(self, reader, writer, recvsize=RECV_SIZE, timeout=DEFAULT_TIMEOUT, ssl_context=None, tls_read_size=TLS_READ_SIZE, debug=False, server_side=True):
         self.__Reader = reader
         self.__Writer = writer
         self.__Recvsize = recvsize
@@ -25,6 +25,7 @@ class StreamWrapper():
         self.__tls_obj = None
         self.__PeerInfo = writer.get_extra_info("peername")
         self.__Debug = debug
+        self.__server_side = server_side
         
         self.__normal_send = self.__non_ssl_send
         self.__normal_recv = self.__non_ssl_recv
@@ -93,7 +94,7 @@ class StreamWrapper():
             
         self.__tls_in_buff = ssl.MemoryBIO()
         self.__tls_out_buff = ssl.MemoryBIO()
-        self.__tls_obj = self.__SSL_context.wrap_bio(self.__tls_in_buff, self.__tls_out_buff, server_side=True)
+        self.__tls_obj = self.__SSL_context.wrap_bio(self.__tls_in_buff, self.__tls_out_buff, server_side=self.__server_side)
         # || TLS Handshake
         self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
         try:
