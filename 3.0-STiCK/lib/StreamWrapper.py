@@ -4,16 +4,16 @@ import ssl
 ########## DEFAULT DEFINES ##########
 DEFAULT_TIMEOUT = 30.0
 RECV_SIZE = 1024 * 4
-TLS_READ_SIZE = -1
+TLS_READ_SIZE = 8
 #####################################
 
-# Stream wrapper for asyncio.start_server, serve_forever
+# Stream wrapper for asyncio.start_server, serve_forever, open_connection
 class StreamWrapper():
     async def __new__(cls, *a, **kw):
         instance = super().__new__(cls)
         await instance.__init__(*a, **kw)
         return instance
-    async def __init__(self, reader, writer, recvsize=RECV_SIZE, timeout=DEFAULT_TIMEOUT, ssl_context=None, tls_read_size=TLS_READ_SIZE, debug=False, server_side=True):
+    async def __init__(self, reader, writer, recvsize=RECV_SIZE, timeout=DEFAULT_TIMEOUT, ssl_context=None, server_side=True, tls_read_size=TLS_READ_SIZE, debug=False):
         self.__Reader = reader
         self.__Writer = writer
         self.__Recvsize = recvsize
@@ -95,17 +95,32 @@ class StreamWrapper():
         self.__tls_in_buff = ssl.MemoryBIO()
         self.__tls_out_buff = ssl.MemoryBIO()
         self.__tls_obj = self.__SSL_context.wrap_bio(self.__tls_in_buff, self.__tls_out_buff, server_side=self.__server_side)
+        if(self.__server_side):
+            # Recv Client Hello
+            self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))          
         # || TLS Handshake
-        self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
         try:
             self.__tls_obj.do_handshake()
         except ssl.SSLWantReadError:
-            self.__Writer.write(self.__tls_out_buff.read())
-            await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
-            self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
-            self.__tls_obj.do_handshake()
-            self.__Writer.write(self.__tls_out_buff.read())
-            await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
+            if(self.__server_side):
+                self.__Writer.write(self.__tls_out_buff.read())
+                await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
+                self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
+                self.__tls_obj.do_handshake()
+                self.__Writer.write(self.__tls_out_buff.read())
+                await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
+            else:
+                # Client Hello
+                self.__Writer.write(self.__tls_out_buff.read())
+                await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
+                # Server Hello
+                self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
+                try:
+                    self.__tls_obj.do_handshake()
+                except ssl.SSLWantReadError:
+                    self.__Writer.write(self.__tls_out_buff.read())
+                    await asyncio.wait_for(self.__Writer.drain(), timeout=self.__Timeout)
+                    self.__tls_in_buff.write(await asyncio.wait_for(self.__Reader.read(self.__Recvsize), timeout=self.__Timeout))
         # -- TLS Handshake
     def Close():
         return
