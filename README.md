@@ -24,3 +24,8 @@ asyncioに切り替えました。
 HTTP(S), HTTP/2, POP3, SMTP(PLAIN-AUTH)
 ### 3.1-STiCK-CookieMoguMogu
 Cookieを食べてみたバージョン。次に引き継ぐかは未定。
+
+## 4.0-AmnesiA
+・Python38  
+HTTP(S), ...  
+今回はCookieを食べられます。
