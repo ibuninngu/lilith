@@ -28,4 +28,4 @@ Cookieを食べてみたバージョン。次に引き継ぐかは未定。
 ## 4.0-AmnesiA
 ・Python38  
 HTTP(S), ...  
-今回はCookieを食べられます。
+今回はCookieを食べられます。VirtualHostとかWebSocketとか…色々。
