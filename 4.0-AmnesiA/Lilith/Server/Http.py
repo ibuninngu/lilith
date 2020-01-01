@@ -108,9 +108,14 @@ class HttpServer(HttpHandler):
         try:
             await self.PostFunctions[self.Request[b"path"]](connection)
         except KeyError as error:
-            f = open(self.MessageDirectory + b"/404.html", "rb")
-            self.ReplyContent = f.read()
-            f.close()
-            self.ContentType = b"text/html"
-            self.Status = 404
+            try:
+                f = open(self.MessageDirectory + b"/404.html", "rb")
+                self.ReplyContent = f.read()
+                f.close()
+                self.ContentType = b"text/plain"
+                self.Status = 404
+            except:
+                self.ReplyContent = b"ContentNotFound & 404 Message Not Found :("
+                self.ContentType = b"text/plain"
+                self.Status = 404
             await self.Reply(connection)
