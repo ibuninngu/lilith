@@ -11,12 +11,15 @@ class HttpHandler(AsyncTcp):
 
     async def __init__(self, host, port, ssl_context):
         await super().__init__(host, port, ssl_context)
-        self.Request = {}
         self.ServerFunctions = {
             b"GET": self.Get,
             b"POST": self.Post
         }
         self.ContentLengthLimit = 1024 * 1024
+
+    # Need Override
+    def NewHeader():
+        pass
 
     # Need Override
     async def Get():
@@ -28,38 +31,40 @@ class HttpHandler(AsyncTcp):
 
     async def Handler(self, connection):
         try:
+            h = self.NewHeader()
+            Request = {}
             while(connection.OnLine):
                 buf = await connection.Recv()
                 if(len(buf) == 0):
                     await connection.Close()
                     return
-                self.Request = {}
+                Request = {}
                 body_pointer = buf.find(b"\r\n\r\n")
                 headers = buf[:body_pointer].split(b"\r\n")
                 request = headers[0].split(b" ")
-                self.Request.update({b"method": request[0]})
-                self.Request.update({b"path": request[1]})
-                self.Request.update({b"version": request[2]})
+                Request.update({b"method": request[0]})
+                Request.update({b"path": request[1]})
+                Request.update({b"version": request[2]})
                 try:
                     for param in headers[1:]:
                         p = param.split(b": ")
-                        self.Request.update({p[0]: p[1]})
+                        Request.update({p[0]: p[1]})
                 except:
                     pass
-                if(self.Request[b"method"] == b"GET"):
+                if(Request[b"method"] == b"GET"):
                     pass
-                elif(self.Request[b"method"] == b"POST"):
+                elif(Request[b"method"] == b"POST"):
                     body = buf[body_pointer+4:]
-                    if(self.ContentLengthLimit < int(self.Request[b'Content-Length'])):
+                    if(self.ContentLengthLimit < int(Request[b'Content-Length'])):
                         await connection.Close()
                         return
-                    while(len(body) < int(self.Request[b'Content-Length'])):
+                    while(len(body) < int(Request[b'Content-Length'])):
                         body += await connection.Recv()
-                    self.Request.update({b"content": body})
+                    Request.update({b"content": body})
                 else:
                     await connection.Close()
                     return
-                await self.ServerFunctions[self.Request[b"method"]](connection)
+                await self.ServerFunctions[Request[b"method"]](connection, Request, h)
         except:
             import traceback
             traceback.print_exc()

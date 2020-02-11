@@ -49,7 +49,6 @@ PORT = 80
 SSL_CONTEXT = None
 ####################
 
-
 class HttpInitialize(HttpServer):
     async def __new__(cls, *a, **kw):
         instance = await super().__new__(cls)
@@ -67,21 +66,20 @@ class HttpInitialize(HttpServer):
         self.PostFunctions = {b"/PostTest.post": self.PostTest}
         self.GePtFunctions = {b"/PostTest.post": self.PostTest}
 
-    async def Get(self, connection):
-        print("GET", self.Request[b"path"])
-        await super().Get(connection)
+    async def Get(self, connection, Request, ReplyHeader):
+        print("GET", Request[b"path"])
+        await super().Get(connection, Request, ReplyHeader)
 
-    async def Post(self, connection):
-        print("POST", self.Request[b"path"], self.Request[b"content"])
-        await super().Post(connection)
+    async def Post(self, connection, Request, ReplyHeader):
+        print("POST", Request[b"path"], Request[b"content"])
+        await super().Post(connection, Request, ReplyHeader)
 
-    async def PostTest(self, connection):
-        print(self.Request[b"content"])
-        self.ReplyContent = self.Request[b"content"]
-        self.ContentType = b"text/html"
-        self.Status = 200
-        await self.Reply(connection)
-
+    async def PostTest(self, connection, Request, ReplyHeader):
+        print(Request[b"content"])
+        ReplyHeader[b"ReplyContent"] = Request[b"content"]
+        ReplyHeader[b"Content-Type"] = b"text/html"
+        ReplyHeader[b"Status"] = 200
+        await self.Reply(connection, ReplyHeader)
 
 async def start():
     HOST = socket.gethostbyname(socket.gethostname())
