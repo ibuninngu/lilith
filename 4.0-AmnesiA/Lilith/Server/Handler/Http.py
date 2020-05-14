@@ -13,7 +13,8 @@ class HttpHandler(AsyncTcp):
         await super().__init__(host, port, ssl_context)
         self.ServerFunctions = {
             b"GET": self.Get,
-            b"POST": self.Post
+            b"POST": self.Post,
+            b"WebSocket": self.WebSocket
         }
         self.ContentLengthLimit = 1024 * 1024
 
@@ -27,6 +28,10 @@ class HttpHandler(AsyncTcp):
 
     # Need Override
     async def Post():
+        pass
+
+    # Need Override
+    async def WebSocket():
         pass
 
     async def Handler(self, connection):
@@ -51,7 +56,9 @@ class HttpHandler(AsyncTcp):
                         Request.update({p[0]: p[1]})
                 except:
                     pass
-                if(Request[b"method"] == b"GET"):
+                if(b"Upgrade" in Request and Request[b"Upgrade"] == b"websocket"):
+                    Request[b"method"] = b"WebSocket"
+                elif(Request[b"method"] == b"GET"):
                     pass
                 elif(Request[b"method"] == b"POST"):
                     body = buf[body_pointer+4:]

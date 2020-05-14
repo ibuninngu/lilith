@@ -1,4 +1,6 @@
 import asyncio
+import hashlib
+import base64
 
 from Lilith.Server.Handler.Http import HttpHandler
 
@@ -16,6 +18,7 @@ class HttpServer(HttpHandler):
         self.DefaultFile = b"/index.html"
         self.PostFunctions = {}
         self.GePtFunctions = {}
+        self.WebSocketFunctions = {}
         self.StatusCodes = {}
         self.MIME = {}
         self._Header = (
@@ -29,14 +32,14 @@ class HttpServer(HttpHandler):
 
     def NewHeader(self):
         return({
-            b"Status":0,
-            b"Server":b"AmnesiA-Lilith/4.0",
-            b"Accept-Ranges":b"bytes",
-            b"Content-Length":0,
-            b"Keep-Alive":b"timeout=30, max=100",
-            b"Content-Type":b"",
-            b"Additional":[],
-            b"ReplyContent":b""
+            b"Status": 0,
+            b"Server": b"AmnesiA-Lilith/4.0",
+            b"Accept-Ranges": b"bytes",
+            b"Content-Length": 0,
+            b"Keep-Alive": b"timeout=30, max=100",
+            b"Content-Type": b"",
+            b"Additional": [],
+            b"ReplyContent": b""
         })
 
     async def Reply(self, connection, header):
@@ -59,7 +62,7 @@ class HttpServer(HttpHandler):
             Request[b"path"] = data[0]
             Request.update({b"content": data[1]})
             try:
-                await self.GePtFunctions[Request[b"path"]](connection, Request, ReplyHeader)
+                await self.GePtFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
             except KeyError as error:
                 try:
                     f = open(self.MessageDirectory + b"/404.html", "rb")
@@ -68,7 +71,8 @@ class HttpServer(HttpHandler):
                     ReplyHeader[b"Content-Type"] = b"text/plain"
                     ReplyHeader[b"Status"] = 404
                 except:
-                    ReplyHeader[b"ReplyContent"] = b"ContentNotFound & 404 Message Not Found :("
+                    ReplyHeader[
+                        b"ReplyContent"] = b"ContentNotFound & 404 Message Not Found :("
                     ReplyHeader[b"Content-Type"] = b"text/plain"
                     ReplyHeader[b"Status"] = 404
                 await self.Reply(connection, ReplyHeader)
@@ -81,7 +85,7 @@ class HttpServer(HttpHandler):
                 f.close()
                 try:
                     ReplyHeader[b"Content-Type"] = self.MIME[
-                        Request[b"path"].split(b".")[1]
+                        Request[b"path"][Request[b"path"].find(b".")+1:]
                     ]
                     ReplyHeader[b"Status"] = 200
                 except:
@@ -98,14 +102,15 @@ class HttpServer(HttpHandler):
                     ReplyHeader[b"Content-Type"] = b"text/plain"
                     ReplyHeader[b"Status"] = 404
                 except:
-                    ReplyHeader[b"ReplyContent"] = b"ContentNotFound & 404 Message Not Found :("
+                    ReplyHeader[
+                        b"ReplyContent"] = b"ContentNotFound & 404 Message Not Found :("
                     ReplyHeader[b"Content-Type"] = b"text/plain"
                     ReplyHeader[b"Status"] = 404
             await self.Reply(connection, ReplyHeader)
 
     async def Post(self, connection, Request, ReplyHeader):
         try:
-            await self.PostFunctions[Request[b"path"]](connection, Request, ReplyHeader)
+            await self.PostFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
         except KeyError as error:
             try:
                 f = open(self.MessageDirectory + b"/404.html", "rb")
@@ -118,3 +123,21 @@ class HttpServer(HttpHandler):
                 ReplyHeader[b"Content-Type"] = b"text/plain"
                 ReplyHeader[b"Status"] = 404
             await self.Reply(connection, ReplyHeader)
+
+    async def WebSocket(self, connection, Request, ReplyHeader):
+        print("Handling WebSocket.")
+        print(Request[b"Sec-WebSocket-Version"])
+        print(Request[b"Sec-WebSocket-Key"])
+        m = hashlib.sha1()
+        m.update(Request[b"Sec-WebSocket-Key"])
+        m.update(b"258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
+        await connection.Send(
+            b"HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: "
+            + base64.b64encode(m.digest())
+            + b"\r\n\r\n"
+        )
+        try:
+            # コード分離のため、selfを引数に含める実装になっています
+            await self.WebSocketFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
+        except:
+            await connection.Close()
