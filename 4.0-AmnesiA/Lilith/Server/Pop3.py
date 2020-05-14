@@ -53,8 +53,8 @@ class Pop3Server(Pop3Handler):
 
     async def UIDL(self, connection, payload, database):
         if(database.is_Authed):
-            R = database.GetUidl()
-            await connection.Send(b"+OK\r\n" + R + b".\r\n")
+            R = database.GetUidl(payload)
+            await connection.Send(R)
         else:
             await connection.Send(b"-ERR \r\n")
 
@@ -69,7 +69,7 @@ class Pop3Server(Pop3Handler):
     async def TOP(self, connection, payload, database):
         if(database.is_Authed):
             lines = int(payload[1])
-            R = database.Retr(int(payload[0]) - 1)
+            R = database.Retr(int(payload[0]))
             buf = (b"+OK %d lines\r\n" % (lines))
             msg = R[1].split("\\r\\n")
             for m in msg:

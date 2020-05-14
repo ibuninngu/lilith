@@ -25,7 +25,7 @@ class SmtpInitialize(SmtpServer):
 
     async def __InitHandlerSslLater__(self, reader, writer):
         # Connection MUST be argment
-        connection = await AsyncStream(reader, writer, ssl_context=self.CtxForStartTLS)
+        connection = await AsyncStream(reader, writer, ssl_context=self.CtxForStartTLS, debug=True)
         await self.Handler(connection)
 
     async def Start(self):

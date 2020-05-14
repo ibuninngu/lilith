@@ -2,6 +2,7 @@ import asyncio
 import sys
 import ssl
 
+from Lilith.Core.Stream import AsyncStream
 from Lilith.Server.Pop3 import Pop3Server
 
 ##### DEFAULTS #####
@@ -19,6 +20,11 @@ class Pop3Initialize(Pop3Server):
 
     async def __init__(self, host=HOST, port=PORT, ssl_context=SSL_CONTEXT):
         await super().__init__(host, port, ssl_context)
+    
+    async def __InitHandlerSSL__(self, reader, writer):
+        # Connection MUST be argment
+        connection = await AsyncStream(reader, writer, debug=True)
+        await self.Handler(connection)
 
 
 async def start():
