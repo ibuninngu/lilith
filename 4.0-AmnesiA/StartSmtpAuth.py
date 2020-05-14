@@ -71,10 +71,9 @@ class SmtpInitialize(SmtpServer):
     async def RCPT(self, connection, payload, database):
         if(database.Auth() and database.AckMail):
             database.RcptTo = []
-            rcpt_domain = payload[0][payload[0].find(
-                b"@")+1:payload[0].find(b">")]
-            database.RcptTo.append(
-                payload[0][payload[0].find(b"<")+1:payload[0].find(b">")])
+            for p in payload:
+                if(p.find(b"<") != -1 and p.find(b"<") != -1):
+                    database.RcptTo.append(p[p.find(b"<")+1:p.find(b">")])
             await connection.Send(b"250 %b... Recipient ok\r\n" % (database.RcptTo[-1]))
         else:
             await connection.Send(b"502 hmm, nop.\r\n")
@@ -100,7 +99,6 @@ class SmtpInitialize(SmtpServer):
                         for a in SERVERS:
                             if(a[0] < mail_server[0]):
                                 mail_server = a
-                        print(mail_server, args)
                         send_mail(server=mail_server[1], mail_from=args[0].encode(
                             "utf-8"), rcpt_to=args[1].encode("utf-8"), data=mail_data)
                     break
@@ -110,7 +108,7 @@ class SmtpInitialize(SmtpServer):
 
     async def __InitHandlerSslLater__(self, reader, writer):
         # Connection MUST be argment
-        connection = await AsyncStream(reader, writer, ssl_context=self.CtxForStartTLS)
+        connection = await AsyncStream(reader, writer, ssl_context=self.CtxForStartTLS, debug=True)
         await self.Handler(connection)
 
     async def Start(self):

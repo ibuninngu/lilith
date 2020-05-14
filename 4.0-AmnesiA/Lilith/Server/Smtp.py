@@ -21,16 +21,17 @@ class SmtpServer(SmtpHandler):
         await connection.Send(b"250-SIZE 157286400\r\n")
         await connection.Send(b"250-8BITMIME\r\n")
         await connection.Send(b"250-ENHANCEDSTATUSCODES\r\n")
-        if(not database.was_starttls):
-            await connection.Send(b"250-STARTTLS\r\n")
+        # if(not database.was_starttls):
+            # await connection.Send(b"250-STARTTLS\r\n")
         await connection.Send(b"250 SMTPUTF8\r\n")
         database.was_hello = True
 
     async def MAIL(self, connection, payload, database):
         if(database.was_hello):
             database.MailFrom = b""
-            database.MailFrom = payload[0][payload[0].find(
-                b"<")+1:payload[0].find(b">")]
+            for p in payload:
+                if(p.find(b"<") != -1 and p.find(b"<") != -1):
+                    database.MailFrom = p[p.find(b"<")+1:p.find(b">")]
             await connection.Send(b"250 %b... Sender ok\r\n" % database.MailFrom)
             database.AckMail = True
         else:
@@ -40,12 +41,15 @@ class SmtpServer(SmtpHandler):
     async def RCPT(self, connection, payload, database):
         if(database.AckMail):
             database.RcptTo = []
-            rcpt_domain = payload[0][payload[0].find(
-                b"@")+1:payload[0].find(b">")]
-            if(rcpt_domain == self.MyDomain):
-                database.RcptTo.append(
-                    payload[0][payload[0].find(b"<")+1:payload[0].find(b"@")])
-                await connection.Send(b"250 %b... Recipient ok\r\n" % (database.RcptTo[-1]))
+            for p in payload:
+                if(p.find(b"<") != -1 and p.find(b"<") != -1):
+                    rcpt_domain = p[p.find(b"@")+1:p.find(b">")]
+                    if(rcpt_domain == self.MyDomain):
+                        database.RcptTo.append(p[p.find(b"<")+1:p.find(b"@")])
+                        await connection.Send(b"250 %b... Recipient ok\r\n" % (database.RcptTo[-1]))
+                    else:
+                        await connection.Send(b"502 hmm, nop.\r\n")
+                        await connection.Close()
         else:
             await connection.Send(b"502 hmm, nop.\r\n")
             await connection.Close()
@@ -81,6 +85,7 @@ class SmtpServer(SmtpHandler):
         if(database.was_hello):
             await connection.Send(b"220 Ready to start TLS\r\n")
             await connection.StartTLS()
+            print("============== TLS OK ==============")
             database.was_hello = False
             database.was_hello = False
             database.AckMail = False
