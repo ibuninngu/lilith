@@ -29,8 +29,8 @@ class SmtpServer(SmtpHandler):
     async def MAIL(self, connection, payload, database):
         if(database.was_hello):
             database.MailFrom = b""
-            database.MailFrom = payload[-1][payload[-1].find(
-                b"<")+1:payload[-1].find(b">")]
+            database.MailFrom = payload[0][payload[0].find(
+                b"<")+1:payload[0].find(b">")]
             await connection.Send(b"250 %b... Sender ok\r\n" % database.MailFrom)
             database.AckMail = True
         else:
@@ -40,11 +40,11 @@ class SmtpServer(SmtpHandler):
     async def RCPT(self, connection, payload, database):
         if(database.AckMail):
             database.RcptTo = []
-            rcpt_domain = payload[-1][payload[-1].find(
-                b"@")+1:payload[-1].find(b">")]
+            rcpt_domain = payload[0][payload[0].find(
+                b"@")+1:payload[0].find(b">")]
             if(rcpt_domain == self.MyDomain):
                 database.RcptTo.append(
-                    payload[-1][payload[-1].find(b"<")+1:payload[-1].find(b"@")])
+                    payload[0][payload[0].find(b"<")+1:payload[0].find(b"@")])
                 await connection.Send(b"250 %b... Recipient ok\r\n" % (database.RcptTo[-1]))
         else:
             await connection.Send(b"502 hmm, nop.\r\n")
