@@ -29,4 +29,4 @@ Cookieを食べてみたバージョン。次に引き継ぐかは未定。
 ・Python38  
 HTTP(S), ...  
 今回はCookieを食べられます。VirtualHost利用可能  
-WebSocketの簡易的な実装は済みましたが、公開はしばらくお待ちください。
+WebSocket実装！
