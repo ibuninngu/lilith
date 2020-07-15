@@ -26,6 +26,7 @@ class HttpServer(HttpHandler):
             b"Server: %b\r\n" +
             b"Accept-Ranges: %b\r\n" +
             b"Content-Length: %i\r\n" +
+            b"Connection: %b\r\n" +
             b"Keep-Alive: %b\r\n" +
             b"Content-Type: %b\r\n"
         )
@@ -36,6 +37,7 @@ class HttpServer(HttpHandler):
             b"Server": b"AmnesiA-Lilith/4.0",
             b"Accept-Ranges": b"bytes",
             b"Content-Length": 0,
+            b"Connection": b"keep-alive",
             b"Keep-Alive": b"timeout=30, max=100",
             b"Content-Type": b"",
             b"Additional": [],
@@ -48,6 +50,7 @@ class HttpServer(HttpHandler):
             header[b"Server"],
             header[b"Accept-Ranges"],
             len(header[b"ReplyContent"]),
+            header[b"Connection"],
             header[b"Keep-Alive"],
             header[b"Content-Type"])
 
