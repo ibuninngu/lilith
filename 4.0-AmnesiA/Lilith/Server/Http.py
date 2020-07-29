@@ -140,6 +140,6 @@ class HttpServer(HttpHandler):
             + b"\r\n\r\n"
         )
         try:
-            # await self.WebSocketFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
+            await self.WebSocketFunctions[Request[b"path"]](connection, Request, ReplyHeader)
         except:
             await connection.Close()
