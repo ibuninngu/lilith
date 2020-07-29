@@ -140,7 +140,6 @@ class HttpServer(HttpHandler):
             + b"\r\n\r\n"
         )
         try:
-            # コード分離のため、selfを引数に含める実装になっています
-            await self.WebSocketFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
+            # await self.WebSocketFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
         except:
             await connection.Close()
