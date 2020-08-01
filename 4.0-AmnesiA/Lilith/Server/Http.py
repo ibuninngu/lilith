@@ -65,7 +65,7 @@ class HttpServer(HttpHandler):
             Request[b"path"] = data[0]
             Request.update({b"content": data[1]})
             try:
-                await self.GePtFunctions[Request[b"path"]](connection, Request, ReplyHeader)
+                await self.GePtFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
             except KeyError as error:
                 try:
                     f = open(self.MessageDirectory + b"/404.html", "rb")
@@ -113,7 +113,7 @@ class HttpServer(HttpHandler):
 
     async def Post(self, connection, Request, ReplyHeader):
         try:
-            await self.PostFunctions[Request[b"path"]](connection, Request, ReplyHeader)
+            await self.PostFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
         except KeyError as error:
             try:
                 f = open(self.MessageDirectory + b"/404.html", "rb")
@@ -140,6 +140,6 @@ class HttpServer(HttpHandler):
             + b"\r\n\r\n"
         )
         try:
-            await self.WebSocketFunctions[Request[b"path"]](connection, Request, ReplyHeader)
+            await self.WebSocketFunctions[Request[b"path"]](self, connection, Request, ReplyHeader)
         except:
             await connection.Close()
