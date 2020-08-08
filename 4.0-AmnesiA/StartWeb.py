@@ -4,8 +4,8 @@ import ssl
 
 from Lilith.Server.Http import HttpServer
 from R.Web.defines import status_codes, mime
-from R.Web.Functions import PostTest, GePtTest
-from R.Web.WebSockFunc import Debug
+from R.Web.Functions import *
+from R.Web.WebSockFunc import *
 
 ##### DEFAULTS #####
 HOST = "localhost"
@@ -26,15 +26,9 @@ class HttpInitialize(HttpServer):
         self.MIME = mime
         self.RootDirectory = (sys.argv[1]).encode("utf-8")
         self.MessageDirectory = (sys.argv[1]).encode("utf-8")
-        self.PostFunctions = {
-            b"/PostTest.post": PostTest
-        }
-        self.GePtFunctions = {
-            b"/GePtTest.gept": GePtTest
-        }
-        self.WebSocketFunctions = {
-            b"/Debug.ws": Debug
-        }
+        self.PostFunctions = PostFunctions
+        self.GePtFunctions = GePtFunctions
+        self.WebSocketFunctions = WebSocketFunctions
 
     async def Get(self, connection, Request, ReplyHeader):
         print("GET", Request[b"path"])

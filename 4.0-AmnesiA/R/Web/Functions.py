@@ -12,3 +12,10 @@ async def GePtTest(self, connection, Request, ReplyHeader):
     ReplyHeader[b"Content-Type"] = b"text/html"
     ReplyHeader[b"Status"] = 200
     await self.Reply(connection, ReplyHeader)
+
+PostFunctions = {
+    b"/PostTest.post": PostTest
+}
+GePtFunctions = {
+    b"/GePtTest.gept": GePtTest
+}

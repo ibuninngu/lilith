@@ -78,3 +78,7 @@ async def Debug(self, connection, Request, ReplyHeader):
             # Binary Frame
             pass
         await connection.Send(R)
+
+WebSocketFunctions = {
+    b"/Debug.ws": Debug
+}
