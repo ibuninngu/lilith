@@ -43,6 +43,8 @@ class HttpHandler(AsyncTcp):
                 if(len(buf) == 0):
                     await connection.Close()
                     return
+                while(buf.find(b"\r\n\r\n") == -1):
+                    buf += await connection.Recv()
                 Request = {}
                 body_pointer = buf.find(b"\r\n\r\n")
                 headers = buf[:body_pointer].split(b"\r\n")
