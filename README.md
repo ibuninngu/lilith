@@ -3,8 +3,8 @@
 全てのバージョンのHTTPサーバーでCGIに似た機能をサポートしています。  
 ※2.0-syndroMEからPythonのバージョンを27から3に変更しています。  
 ドキュメントは・・・ない。  
-    
-___ I don't eat cookies because it's high calorie.
+
+<img src="https://raw.githubusercontent.com/ibuninngu/Lilith/master/4.0-AmnesiA/Files/Web/l4header.png">
 
 ## 0.0-SCETCH
 ・Python27  
