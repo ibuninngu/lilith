@@ -2,6 +2,7 @@
 本格的なサービスの提供ではなく、とりあえず動くゴミを手っ取り早くでっち上げるために開発されています。とはいえ最近ではWebサーバーの動作はかなり安定しており、いくつかのサービスでAPIサーバーとして利用されています。
 全てのバージョンのHTTPサーバーでCGIに似た機能をサポートしています。  
 ※2.0-syndroMEからPythonのバージョンを27から3に変更しています。  
+3.0からは流行りの非同期サーバーになりました  
 ドキュメントは・・・ない。  
 
 <img src="https://raw.githubusercontent.com/ibuninngu/Lilith/master/4.0-AmnesiA/Files/Web/l4header.png">
