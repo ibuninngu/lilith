@@ -9,7 +9,7 @@
   
 ## Lilithで動いているサービス
 Eve.Familia, Inc.|Eve.Security™|EveEye  
-セキュリティのために利用される様々なツールをWeb上から利用できる日本初のサービスです。  
+セキュリティのために利用される様々なツールをWeb上から利用できる日本初（多分）のサービスです。  
 <a href="https://eye.eve.ninja">
 <img src="https://www.eve.familia.inc/img/eve_eye.png">
 </a>
