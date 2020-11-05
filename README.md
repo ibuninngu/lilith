@@ -3,6 +3,7 @@
 全てのバージョンのHTTPサーバーでCGIに似た機能をサポートしています。  
 ※2.0-syndroMEからPythonのバージョンを27から3に変更しています。  
 3.0からは流行りの非同期サーバーになりました  
+2020/11/05からEve.Familia, Inc.に開発を引き継ぎ  
 
 <img src="https://raw.githubusercontent.com/ibuninngu/Lilith/master/4.0-AmnesiA/Files/Web/l4header.png">
   
